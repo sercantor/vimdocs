@@ -218,6 +218,69 @@ function attachKeyListener(element) {
                         lastKeyPressed = 'g';
                     }
                     break;
+                case 'z':
+                    if (lastKeyPressed === 'z') {
+                        // zz command - center current line in viewport
+                        // In Google Docs, we'll scroll the current line to center
+                        if (userCursor) {
+                            userCursor.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                        }
+                        lastKeyPressed = null; // Reset after handling zz
+                        break;
+                    } else {
+                        lastKeyPressed = 'z';
+                        // Don't break here - wait for the second 'z'
+                    }
+                    break;
+                case 'H':
+                    // Move cursor to top of currently visible screen area (no scrolling)
+                    if (userCursor) {
+                        const cursorRect = userCursor.getBoundingClientRect();
+                        const viewportTop = 100; // Account for Google Docs toolbar
+                        const targetY = viewportTop + 50; // Near top of visible text area
+                        
+                        // Only move if cursor is not already near the top
+                        if (cursorRect.top > targetY + 20) {
+                            // Move up line by line until we're near the top of viewport
+                            let iterations = 0;
+                            const maxIterations = 30;
+                            
+                            while (iterations < maxIterations) {
+                                const currentRect = userCursor.getBoundingClientRect();
+                                if (currentRect.top <= targetY + 20) break;
+                                
+                                simulateKeyPress('ArrowUp');
+                                iterations++;
+                            }
+                        }
+                    }
+                    break;
+                case 'L':
+                    // Move cursor to bottom of currently visible screen area (no scrolling)
+                    if (userCursor) {
+                        const cursorRect = userCursor.getBoundingClientRect();
+                        const viewportBottom = window.innerHeight - 50; // Account for bottom margin
+                        const targetY = viewportBottom - 50; // Near bottom of visible text area
+                        
+                        // Only move if cursor is not already near the bottom
+                        if (cursorRect.top < targetY - 20) {
+                            // Move down line by line until we're near the bottom of viewport
+                            let iterations = 0;
+                            const maxIterations = 30;
+                            
+                            while (iterations < maxIterations) {
+                                const currentRect = userCursor.getBoundingClientRect();
+                                if (currentRect.top >= targetY - 20) break;
+                                
+                                simulateKeyPress('ArrowDown');
+                                iterations++;
+                            }
+                        }
+                    }
+                    break;
                 default:
                     if (deletionPending || replacementPending) {
                         event.stopPropagation();

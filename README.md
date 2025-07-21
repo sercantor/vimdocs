@@ -26,6 +26,9 @@ Click "Load unpacked" on the top left, navigate to where you put the folder and 
 - [x] $ - jump to end of line
 - [x] gg - jump to first line of document
 - [x] G - jump to end of document
+- [x] H - move to top of visible screen
+- [x] L - move to bottom of visible screen
+- [x] zz - center current line in viewport
 
 ## Entering Insert Mode
 
